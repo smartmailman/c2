@@ -1,8 +1,8 @@
 module C2
-  module ControllerAdditions        
+  module ControllerAdditions
     def self.included(base)
       base.extend ClassMethods
-      base.helper_method :current_c2_agent, :current_c2_agent_title, :c2_login_path, :c2_profile_path, :c2_logout_path
+      base.helper_method :current_c2_agent, :current_c2_agent_title, :c2_login_path, :c2_profile_path, :c2_logout_path, :authorize_c2_agent
     end
     
     module ClassMethods
@@ -37,8 +37,7 @@ module C2
   end
 end
 
-if defined? ActionController
-  ActionController::Base.class_eval do
-    include C2::ControllerAdditions
-  end
+ActiveSupport.on_load(:action_controller) do
+  include C2::ControllerAdditions::ClassMethods
+  helper_method :current_c2_agent, :current_c2_agent_title, :c2_login_path, :c2_profile_path, :c2_logout_path, :authorize_c2_agent
 end
